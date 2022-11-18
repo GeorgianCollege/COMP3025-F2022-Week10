@@ -20,16 +20,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var TVShows: MutableList<TVShow>
 
-    /*
-    var FavouriteTVShows = mutableListOf<TVShow>(
-        TVShow("House of the Dragon", "HBO"),
-        TVShow("Lord of the Rings", "Prime Video"),
-        TVShow("Andor", "Disney"),
-        TVShow("Severance", "AppleTv"),
-        TVShow("Star Trek: Strange New Worlds", "Paramount+"))
-
-     */
-
     lateinit var addTVShowFAB: FloatingActionButton
     lateinit var tvShowAdapter: TVShowAdapter
 
@@ -60,6 +50,12 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = tvShowAdapter
     }
 
+    fun writeNewTVShow(tvShow: TVShow)
+    {
+        var id = TVShows.size.toString()
+        database.child("TVShows").child(id).setValue(tvShow)
+    }
+
     private fun showCreateTVShowDialog() {
         val dialogTitle = getString(R.string.dialog_title)
         val positiveButtonTitle = getString(R.string.add_tv_show)
@@ -74,8 +70,12 @@ class MainActivity : AppCompatActivity() {
             val tvShowTitleEditText = view.findViewById<EditText>(R.id.TV_Show_Title_EditText)
             val studioTitleEditText = view.findViewById<EditText>(R.id.Studio_Name_EditText)
             val newTVShow = TVShow(tvShowTitleEditText.text.toString(), studioTitleEditText.text.toString())
+            writeNewTVShow(newTVShow)
+
+            /*
             TVShows.add(newTVShow)
             tvShowAdapter.notifyItemInserted(TVShows.size)
+             */
         }
         builder.create().show()
     }
@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                     if(newShow != null)
                     {
                         TVShows.add(newShow)
+                        tvShowAdapter.notifyDataSetChanged()
                     }
                 }
 
