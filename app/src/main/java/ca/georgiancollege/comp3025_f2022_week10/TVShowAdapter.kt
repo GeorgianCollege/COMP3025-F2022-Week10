@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 class TVShowAdapter(private val dataSet: MutableList<TVShow>):
     RecyclerView.Adapter<TVShowAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    var onTVShowClick: ((TVShow)-> Unit)? = null
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     {
         val title: TextView
         val studio: TextView
@@ -18,6 +20,10 @@ class TVShowAdapter(private val dataSet: MutableList<TVShow>):
             // Define click listener for the ViewHolder's View.
             title = view.findViewById(R.id.tv_show_title)
             studio = view.findViewById(R.id.studio)
+
+            view.setOnClickListener{
+                onTVShowClick?.invoke(dataSet[adapterPosition])
+            }
         }
     }
 

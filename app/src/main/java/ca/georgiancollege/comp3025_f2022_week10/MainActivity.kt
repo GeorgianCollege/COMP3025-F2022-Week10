@@ -32,6 +32,10 @@ class MainActivity : AppCompatActivity() {
         TVShows = mutableListOf<TVShow>() // creates an empty List container
         tvShowAdapter = TVShowAdapter(TVShows)
 
+        tvShowAdapter.onTVShowClick = { tvShow ->
+            Log.i("tvShow", "Clicked TVShow: $tvShow")
+        }
+
         initializeRecyclerView()
         initializeFAB()
         addTVShowEventListener(database)
