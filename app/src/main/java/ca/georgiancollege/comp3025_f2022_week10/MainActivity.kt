@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         tvShowAdapter = TVShowAdapter(TVShows)
 
         tvShowAdapter.onTVShowClick = { tvShow ->
-            Log.i("tvShow", "Clicked TVShow: $tvShow")
+            showCreateTVShowDialog(AlertAction.UPDATE, tvShow)
         }
 
         initializeRecyclerView()
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeFAB() {
         addTVShowFAB = findViewById(R.id.add_TV_Show_FAB)
         addTVShowFAB.setOnClickListener {
-            showCreateTVShowDialog()
+            showCreateTVShowDialog(AlertAction.ADD, null)
         }
     }
 
@@ -60,27 +60,58 @@ class MainActivity : AppCompatActivity() {
         database.child("TVShows").child(id).setValue(tvShow)
     }
 
-    private fun showCreateTVShowDialog() {
-        val dialogTitle = getString(R.string.dialog_title)
-        val positiveButtonTitle = getString(R.string.add_tv_show)
+    private fun showCreateTVShowDialog(alertAction: AlertAction, tvShow: TVShow?) {
+        var dialogTitle: String = ""
+        var positiveButtonTitle: String = ""
+
+        when (alertAction) {
+            AlertAction.ADD -> {
+                dialogTitle = getString(R.string.add_dialog_title)
+                positiveButtonTitle = getString(ca.georgiancollege.comp3025_f2022_week10.R.string.add_tv_show)
+            }
+            AlertAction.UPDATE -> {
+                dialogTitle = getString(R.string.update_dialog_title)
+                positiveButtonTitle = getString(ca.georgiancollege.comp3025_f2022_week10.R.string.update_tv_show)
+            }
+        }
+
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.add_new_tv_show_item, null)
 
         builder.setTitle(dialogTitle)
         builder.setView(view)
 
-        builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
-            dialog.dismiss()
-            val tvShowTitleEditText = view.findViewById<EditText>(R.id.TV_Show_Title_EditText)
-            val studioTitleEditText = view.findViewById<EditText>(R.id.Studio_Name_EditText)
-            val newTVShow = TVShow(tvShowTitleEditText.text.toString(), studioTitleEditText.text.toString())
-            writeNewTVShow(newTVShow)
+        val tvShowTitleEditText = view.findViewById<EditText>(R.id.TV_Show_Title_EditText)
+        val studioTitleEditText = view.findViewById<EditText>(R.id.Studio_Name_EditText)
 
-            /*
-            TVShows.add(newTVShow)
-            tvShowAdapter.notifyItemInserted(TVShows.size)
-             */
+        if(alertAction == AlertAction.UPDATE)
+        {
+            if (tvShow != null) {
+                tvShowTitleEditText.setText(tvShow?.title)
+                studioTitleEditText.setText(tvShow?.studio)
+            }
         }
+
+        when(alertAction)
+        {
+            AlertAction.ADD -> {
+                builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
+                    dialog.dismiss()
+                    val newTVShow = TVShow(tvShowTitleEditText.text.toString(), studioTitleEditText.text.toString())
+                    writeNewTVShow(newTVShow)
+                }
+            }
+            AlertAction.UPDATE -> {
+                builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
+                    dialog.dismiss()
+                    val newTVShow = TVShow(tvShowTitleEditText.text.toString(), studioTitleEditText.text.toString())
+                    writeNewTVShow(newTVShow) // TODO: Change to UpdateTVShow
+                }
+            }
+
+
+        }
+
         builder.create().show()
     }
 
