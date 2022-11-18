@@ -92,14 +92,6 @@ class MainActivity : AppCompatActivity() {
         val tvShowTitleEditText = view.findViewById<EditText>(R.id.TV_Show_Title_EditText)
         val studioTitleEditText = view.findViewById<EditText>(R.id.Studio_Name_EditText)
 
-        if(alertAction == AlertAction.UPDATE)
-        {
-            if (tvShow != null) {
-                tvShowTitleEditText.setText(tvShow?.title)
-                studioTitleEditText.setText(tvShow?.studio)
-            }
-        }
-
         when(alertAction)
         {
             AlertAction.ADD -> {
@@ -110,16 +102,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             AlertAction.UPDATE -> {
+
+                if (tvShow != null) {
+                    tvShowTitleEditText.setText(tvShow?.title)
+                    studioTitleEditText.setText(tvShow?.studio)
+                }
+
                 builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
                     dialog.dismiss()
                     val newTVShow = TVShow(tvShowTitleEditText.text.toString(), studioTitleEditText.text.toString())
                     updateTVShow(position.toString(), newTVShow)
                 }
             }
-
-
         }
-
         builder.create().show()
     }
 
