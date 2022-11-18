@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class FirstAdapter(private val dataSet: MutableList<TVShow>):
-    RecyclerView.Adapter<FirstAdapter.ViewHolder>() {
+class TVShowAdapter(private val dataSet: MutableList<TVShow>):
+    RecyclerView.Adapter<TVShowAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     {

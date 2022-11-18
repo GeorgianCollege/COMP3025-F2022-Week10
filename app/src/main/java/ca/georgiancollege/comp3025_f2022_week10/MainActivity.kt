@@ -1,19 +1,20 @@
 package ca.georgiancollege.comp3025_f2022_week10
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
-import android.util.Log
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DatabaseReference
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var database: DatabaseReference
+    private lateinit var TVShows: MutableList<TVShow>
+
+    /*
     var FavouriteTVShows = mutableListOf<TVShow>(
         TVShow("House of the Dragon", "HBO"),
         TVShow("Lord of the Rings", "Prime Video"),
@@ -21,18 +22,20 @@ class MainActivity : AppCompatActivity() {
         TVShow("Severance", "AppleTv"),
         TVShow("Star Trek: Strange New Worlds", "Paramount+"))
 
+     */
+
     lateinit var addTVShowFAB: FloatingActionButton
-    lateinit var firstAdapter: FirstAdapter
+    lateinit var tvShowAdapter: TVShowAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        firstAdapter = FirstAdapter(FavouriteTVShows)
+        tvShowAdapter = TVShowAdapter(TVShows)
         val recyclerView: RecyclerView = findViewById(R.id.First_Recycler_View)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = firstAdapter
+        recyclerView.adapter = tvShowAdapter
 
         addTVShowFAB = findViewById(R.id.add_TV_Show_FAB)
 
@@ -55,8 +58,8 @@ class MainActivity : AppCompatActivity() {
             val tvShowTitleEditText = view.findViewById<EditText>(R.id.TV_Show_Title_EditText)
             val studioTitleEditText = view.findViewById<EditText>(R.id.Studio_Name_EditText)
             val newTVShow = TVShow(tvShowTitleEditText.text.toString(), studioTitleEditText.text.toString())
-            FavouriteTVShows.add(newTVShow)
-            firstAdapter.notifyItemInserted(FavouriteTVShows.size)
+            TVShows.add(newTVShow)
+            tvShowAdapter.notifyItemInserted(TVShows.size)
         }
         builder.create().show()
     }
