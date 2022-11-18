@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 class TVShowAdapter(private val dataSet: MutableList<TVShow>):
     RecyclerView.Adapter<TVShowAdapter.ViewHolder>() {
 
-    var onTVShowClick: ((TVShow)-> Unit)? = null
+    var onTVShowClick: ((TVShow, position: Int)-> Unit)? = null
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     {
@@ -22,7 +22,7 @@ class TVShowAdapter(private val dataSet: MutableList<TVShow>):
             studio = view.findViewById(R.id.studio)
 
             view.setOnClickListener{
-                onTVShowClick?.invoke(dataSet[adapterPosition])
+                onTVShowClick?.invoke(dataSet[adapterPosition], adapterPosition)
             }
         }
     }

@@ -32,8 +32,10 @@ class MainActivity : AppCompatActivity() {
         TVShows = mutableListOf<TVShow>() // creates an empty List container
         tvShowAdapter = TVShowAdapter(TVShows)
 
-        tvShowAdapter.onTVShowClick = { tvShow ->
-            showCreateTVShowDialog(AlertAction.UPDATE, tvShow)
+
+
+        tvShowAdapter.onTVShowClick = { tvShow, position ->
+            showCreateTVShowDialog(AlertAction.UPDATE, tvShow, position)
         }
 
         initializeRecyclerView()
@@ -41,10 +43,11 @@ class MainActivity : AppCompatActivity() {
         addTVShowEventListener(database)
     }
 
+
     private fun initializeFAB() {
         addTVShowFAB = findViewById(R.id.add_TV_Show_FAB)
         addTVShowFAB.setOnClickListener {
-            showCreateTVShowDialog(AlertAction.ADD, null)
+            showCreateTVShowDialog(AlertAction.ADD, null, null)
         }
     }
 
@@ -60,7 +63,12 @@ class MainActivity : AppCompatActivity() {
         database.child("TVShows").child(id).setValue(tvShow)
     }
 
-    private fun showCreateTVShowDialog(alertAction: AlertAction, tvShow: TVShow?) {
+    fun updateTVShow(id: String, tvShow: TVShow)
+    {
+        database.child("TVShows").child(id).setValue(tvShow)
+    }
+
+    private fun showCreateTVShowDialog(alertAction: AlertAction, tvShow: TVShow?, position: Int?) {
         var dialogTitle: String = ""
         var positiveButtonTitle: String = ""
 
@@ -105,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
                     dialog.dismiss()
                     val newTVShow = TVShow(tvShowTitleEditText.text.toString(), studioTitleEditText.text.toString())
-                    writeNewTVShow(newTVShow) // TODO: Change to UpdateTVShow
+                    updateTVShow(position.toString(), newTVShow)
                 }
             }
 
